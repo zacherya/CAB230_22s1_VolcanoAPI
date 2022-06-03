@@ -18,13 +18,8 @@ router.get("/", function (req, res, next) {
     .then((rows) => rows.map((obj) => obj.Country))
     .then((countries) => res.status(200).json(countries))
     .catch((error) => {
-      res
-        .status(500)
-        .json({
-          error: true,
-          message: "An internal database error has occured",
-        });
       console.log(error);
+      throw new Error("An internal server error has occured");
     });
 });
 

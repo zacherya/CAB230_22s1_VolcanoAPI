@@ -1,4 +1,5 @@
 var express = require("express");
+const createHttpError = require("http-errors");
 var router = express.Router();
 
 /* GET users listing. */
@@ -42,11 +43,8 @@ router.get("/", function (req, res, next) {
     .orderBy(order)
     .then((countries) => res.status(200).json(countries))
     .catch((error) => {
-      res.status(500).json({
-        error: true,
-        message: "An internal database error has occured",
-      });
       console.log(error);
+      throw new Error("An internal server error has occured");
     });
 });
 

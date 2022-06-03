@@ -1,8 +1,9 @@
 var express = require("express");
+const { requiresAuthentication } = require("../../helpers/accesstoken");
 var router = express.Router();
 
 /* GET users listing. */
-router.get("/:VolcanoId", function (req, res, next) {
+router.get("/:VolcanoId", requiresAuthentication, function (req, res, next) {
   if (Object.keys(req.query).length > 0) {
     res.status(400).json({
       error: true,
@@ -33,7 +34,8 @@ router.get("/:VolcanoId", function (req, res, next) {
     "latitude",
     "longitude",
   ];
-  if (true === true) {
+  // If user is autenticated provide population data
+  if (!req.user) {
     columns.push(
       "population_5km",
       "population_10km",
@@ -59,11 +61,8 @@ router.get("/:VolcanoId", function (req, res, next) {
     })
     .then((volcano) => res.status(200).json(volcano))
     .catch((error) => {
-      res.status(500).json({
-        error: true,
-        message: "An internal database error has occured",
-      });
       console.log(error);
+      throw new Error("An internal server error has occured");
     });
 });
 
