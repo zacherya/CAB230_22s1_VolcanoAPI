@@ -1,6 +1,10 @@
 const createHttpError = require("http-errors");
 const jwt = require("jsonwebtoken");
 
+/**
+ * Get the token secret from the environment variable
+ * @returns {string} The secret used to sign JWT tokens
+ */
 function getTokenSecret() {
   // Generated using:
   //    require('crypto').randomBytes(64).toString('hex')
@@ -8,16 +12,16 @@ function getTokenSecret() {
   return process.env.TOKEN_SECRET;
 }
 
+/**
+ * Create the token payload information with token and expiry set
+ * @param {string} email The users email address used to inject into the token payload for validation
+ * @returns
+ */
 function createTokenPayload(email) {
   const tokenSecret = getTokenSecret();
   const token = jwt.sign({ email: email }, tokenSecret, {
     expiresIn: "24h" /* Short hand for: Date.Now() + 60*60*24 (S*M*H) */,
   });
-  console.log(
-    jwt.sign({ email: email }, tokenSecret, {
-      expiresIn: "-24h" /* Short hand for: Date.Now() + 60*60*24 (S*M*H) */,
-    })
-  );
   return { token: token, expires: 24 * 60 * 60 /* Expires in 24hours */ };
 }
 
