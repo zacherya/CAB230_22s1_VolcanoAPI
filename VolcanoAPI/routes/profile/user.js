@@ -4,7 +4,7 @@ const {
   requiresLaxAuthentication,
   requiresStrictAuthentication,
 } = require("../../helpers/accesstoken");
-const dateValidator = require("../../helpers/datevalidator");
+const dateValidator = require("../../helpers/dateValidator");
 var router = express.Router();
 
 /* GET user profile route. */
