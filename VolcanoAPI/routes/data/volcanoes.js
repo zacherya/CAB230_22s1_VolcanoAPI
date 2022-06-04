@@ -12,6 +12,19 @@ router.get("/", function (req, res, next) {
     return;
   }
 
+  const requiresQueryKeys = ["country", "populatedWithin"];
+  const outliers = Object.keys(req.query).filter(
+    (queryKey) => !requiresQueryKeys.includes(queryKey)
+  );
+  if (outliers.length > 0) {
+    res.status(400).json({
+      error: true,
+      message:
+        "Invalid query parameters. Only country and populatedWithin are permitted.",
+    });
+    return;
+  }
+
   var populationFilter;
 
   if (req.query.populatedWithin) {

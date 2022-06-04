@@ -1,9 +1,9 @@
 var express = require("express");
-const { requiresAuthentication } = require("../../helpers/accesstoken");
+const { requiresLaxAuthentication } = require("../../helpers/accesstoken");
 var router = express.Router();
 
 /* GET users listing. */
-router.get("/:VolcanoId", requiresAuthentication, function (req, res, next) {
+router.get("/:VolcanoId", requiresLaxAuthentication, function (req, res, next) {
   if (Object.keys(req.query).length > 0) {
     res.status(400).json({
       error: true,
@@ -35,7 +35,7 @@ router.get("/:VolcanoId", requiresAuthentication, function (req, res, next) {
     "longitude",
   ];
   // If user is autenticated provide population data
-  if (!req.user) {
+  if (req.user !== undefined) {
     columns.push(
       "population_5km",
       "population_10km",

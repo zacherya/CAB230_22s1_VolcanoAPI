@@ -1,7 +1,7 @@
 var express = require("express");
 const createHttpError = require("http-errors");
 const {
-  requiresAuthentication,
+  requiresLaxAuthentication,
   requiresStrictAuthentication,
 } = require("../../helpers/accesstoken");
 const dateValidator = require("../../helpers/datevalidator");
@@ -10,7 +10,7 @@ var router = express.Router();
 /* GET user profile route. */
 router.get(
   "/:Email/profile",
-  requiresAuthentication,
+  requiresLaxAuthentication,
   function (req, res, next) {
     const email = req.params.Email;
     const columns = ["email", "firstName", "lastName"];

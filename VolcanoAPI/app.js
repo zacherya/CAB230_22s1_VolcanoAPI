@@ -4,6 +4,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var path = require("path");
+var cors = require("cors");
 
 const rfs = require("rotating-file-stream");
 
@@ -11,6 +12,10 @@ const dotenv = require("dotenv");
 dotenv.config(); // get config vars
 
 const helmet = require("helmet");
+
+//Import custom error handler and httpError handler
+const createHttpError = require("http-errors");
+const errorHelper = require("./middleware/error-helper.js");
 
 // Import swagger documentation modules
 const swaggerUi = require("swagger-ui-express");
@@ -20,8 +25,7 @@ const swaggerDocument = require("./swagger.json");
 const options = require("./knexfile.js");
 const knex = require("knex")(options);
 
-const errorHelper = require("./middleware/error-helper.js");
-
+// Import endpoint route modules
 var indexRouter = require("./routes/index");
 var profileRouter = require("./routes/profile/user");
 var usersRouter = require("./routes/authentication/user");
@@ -29,9 +33,10 @@ var countryRouter = require("./routes/data/country");
 var volcanoRouter = require("./routes/data/volcano");
 var volcanoesRouter = require("./routes/data/volcanoes");
 var meRouter = require("./routes/administration/me");
-const createHttpError = require("http-errors");
 
 var app = express();
+
+app.use(cors());
 
 var accessLogStream = rfs.createStream("access.log", {
   interval: "1d",
@@ -58,8 +63,6 @@ app.use((req, res, next) => {
 });
 
 // Define endpoint routes
-// app.use("/", indexRouter);
-//https://simonplend.com/how-to-create-an-error-handler-for-your-express-api/
 app.use("/user", usersRouter);
 app.use("/user/?", profileRouter);
 app.use("/countries", countryRouter);
@@ -67,31 +70,16 @@ app.use("/volcanoes", volcanoesRouter);
 app.use("/volcano", volcanoRouter);
 app.use("/me", meRouter);
 
-app.use("/", swaggerUi.serve);
-app.get("/", swaggerUi.setup(swaggerDocument));
+// Serve swagger docs on index route
+app.use("/", swaggerUi.serve); // serve swagger on root
+app.get("/", swaggerUi.setup(swaggerDocument)); // use swagger router handler for files
 
-// Catch 404 and forward to error handler
+// Catch 404 and forward to error custom handler
 app.use("*", function (req, res, next) {
   next(createHttpError(404, "Page not found!"));
 });
 
-// Custom error handler
+// Use the custom error handler
 app.use(errorHelper);
-
-// // catch 404 and forward to error handler
-// app.use(function (req, res, next) {
-//   next(createError(404));
-// });
-
-// // error handler
-// app.use(function (err, req, res, next) {
-//   // set locals, only providing error in development
-//   res.locals.message = err.message;
-//   res.locals.error = req.app.get("env") === "development" ? err : {};
-
-//   // render the error page
-//   res.status(err.status || 500);
-//   res.render("error");
-// });
 
 module.exports = app;
