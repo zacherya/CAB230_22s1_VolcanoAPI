@@ -1,3 +1,7 @@
+/**
+ * CAB230 VolcanoAPI - Zachery Adams (n10772693)
+ */
+
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
@@ -21,7 +25,7 @@ const errorHelper = require("./middleware/error-helper.js");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
 
-//Import Knex and use Knexfile defined options
+//Import, initalise Knex and use Knexfile defined options
 const options = require("./knexfile.js");
 const knex = require("knex")(options);
 
@@ -34,10 +38,13 @@ var volcanoRouter = require("./routes/data/volcano");
 var volcanoesRouter = require("./routes/data/volcanoes");
 var meRouter = require("./routes/administration/me");
 
+// define the Express API app as a new instance of Express
 var app = express();
 
+// Use cross origin access policies (Injected in res headers)
 app.use(cors());
 
+// Use basic logging
 var accessLogStream = rfs.createStream("access.log", {
   interval: "1d",
   path: path.join(__dirname, "logs"),
@@ -57,6 +64,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+// Inject the Knex instance into the request object for db access
 app.use((req, res, next) => {
   req.db = knex;
   next();
