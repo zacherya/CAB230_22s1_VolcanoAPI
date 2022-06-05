@@ -15,7 +15,7 @@ function getTokenSecret() {
 /**
  * Create the token payload information with token and expiry set
  * @param {string} email The users email address used to inject into the token payload for validation
- * @returns
+ * @returns {object} The custom token payload with the token and expiry data
  */
 function createTokenPayload(email) {
   const tokenSecret = getTokenSecret();
@@ -25,6 +25,14 @@ function createTokenPayload(email) {
   return { token: token, expires: 24 * 60 * 60 /* Expires in 24hours */ };
 }
 
+/**
+ * A private function that injects the user data into the required middleware/s
+ * This is called either via the requiresLaxAuthentication or requiresStrictAuthentication functions
+ * @param {object} req The request object passed from the calling middleware
+ * @param {object} res The response object passed from the calling middleware
+ * @param {any} next The next middleware in the processing order to call
+ * @returns {null} Returns nothing but will proceed to the next middleware when next() is called
+ */
 function injectAuth(req, res, next) {
   const authHeader = req.headers["authorization"];
 
@@ -78,6 +86,16 @@ function injectAuth(req, res, next) {
   });
 }
 
+/**
+ * A public middleware interceptor that will inject the user data into the request object.
+ * This will only inject authentication if a token is present, if it doesn't the next middleware will
+ * still run but may be limited in it's functionality
+ * This should be used to protect some aspects of an endpoint but not it's entirety.
+ * @param {object} req The request object passed from the calling middleware
+ * @param {object} res The response object passed from the calling middleware
+ * @param {any} next The next middleware in the processing order to call
+ * @returns {null} Returns nothing but will proceed to the next middleware when next() is called
+ */
 function requiresLaxAuthentication(req, res, next) {
   const authHeader = req.headers["authorization"];
 
@@ -90,6 +108,16 @@ function requiresLaxAuthentication(req, res, next) {
   injectAuth(req, res, next);
 }
 
+/**
+ * A public middleware interceptor that will inject the user data into the request object.
+ * This will only inject authentication if a token is present, if it isn't then an error will be
+ * thrown and the calling middleware will not be executed.
+ * This should be used to protect endpoints from being used without a valid token.
+ * @param {object} req The request object passed from the calling middleware
+ * @param {object} res The response object passed from the calling middleware
+ * @param {any} next The next middleware in the processing order to call
+ * @returns {null} Returns nothing but will proceed to the next middleware when next() is called
+ */
 function requiresStrictAuthentication(req, res, next) {
   const authHeader = req.headers["authorization"];
 
