@@ -4,7 +4,7 @@
 A REST API service built in nodejs using the express framework, used to deliver information about volcanoes around the world.
 
 
-## Installation
+## Installation - Linux
 
 1. Launch a console window in the root directory of the projects.
 
@@ -42,6 +42,21 @@ A REST API service built in nodejs using the express framework, used to deliver 
 or if developing use `nodemon` for live restarts when project files change
 ```bash
    npm start live
+```
+
+### Having trouble running without sudo in production?
+You'll need to enabled Linux to bind to privilaged ports and access protected certificate files
+```bash
+   sudo chmod +rx /etc/ssl/private/
+   sudo chmod +r /etc/ssl/private/node-selfsigned.key
+   sudo setcap ‘cap_net_bind_service=+ep’ /usr/bin/node
+```
+Alternatively you can give the super user ownership of the project directory and run with sudo
+```bash
+   cd ..
+   sudo chown root VolcanoAPI
+   cd VolcanoAPI
+   sudo npm start
 ```
 ## API Documentation
 
