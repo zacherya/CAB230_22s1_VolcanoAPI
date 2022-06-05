@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
+const dotenv = require("dotenv");
+dotenv.config(); // get config vars
 var node_env = process.env.NODE_ENV || "development";
-
+console.log(`Server running for ${node_env}`);
 /**
  * Module dependencies.
  */
@@ -42,8 +44,10 @@ if (node_env === "production") {
     cert: certificate,
   };
   server = http.createServer(credentials, app);
+  console.log("Server started in HTTPS mode");
 } else {
   server = http.createServer(app);
+  console.log("Server started in HTTP mode");
 }
 
 /**
@@ -53,6 +57,7 @@ if (node_env === "production") {
 server.listen(port);
 server.on("error", onError);
 server.on("listening", onListening);
+console.log("Now listening on port " + port);
 
 /**
  * Normalize a port into a number, string, or false.

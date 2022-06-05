@@ -30,7 +30,6 @@ const options = require("./knexfile.js");
 const knex = require("knex")(options);
 
 // Import endpoint route modules
-var indexRouter = require("./routes/index");
 var profileRouter = require("./routes/profile/user");
 var usersRouter = require("./routes/authentication/user");
 var countryRouter = require("./routes/data/country");
