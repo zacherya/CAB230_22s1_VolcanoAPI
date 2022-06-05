@@ -58,6 +58,13 @@ Alternatively you can give the super user ownership of the project directory and
    cd VolcanoAPI
    sudo npm start
 ```
+
+### Need help creating a self signed cert for testing?
+Run the following commands to create one in the default ssl certificate and key directories
+```bash
+   sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/node-selfsigned.key -out /etc/ssl/certs/node-selfsigned.crt
+```
+
 ## API Documentation
 
 When running the project, visit the `Swagger Documentation` located on the root of the accessable url.
