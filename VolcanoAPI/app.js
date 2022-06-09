@@ -26,7 +26,7 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
 
 //Import, initalise Knex and use Knexfile defined options
-const options = require("./knexfile.js");
+const options = require("./data/database-knex.js");
 const knex = require("knex")(options);
 
 // Import endpoint route modules
