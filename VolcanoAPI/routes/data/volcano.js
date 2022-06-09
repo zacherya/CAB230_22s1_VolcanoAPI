@@ -1,5 +1,5 @@
 var express = require("express");
-const { requiresLaxAuthentication } = require("../../helpers/accesstoken");
+const { requiresLaxAuthentication } = require("../../middleware/access-token");
 var router = express.Router();
 
 /* GET users listing. */

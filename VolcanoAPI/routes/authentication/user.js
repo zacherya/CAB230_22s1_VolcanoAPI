@@ -1,6 +1,9 @@
 var express = require("express");
 const createHttpError = require("http-errors");
-var { createToken, createTokenPayload } = require("../../helpers/accesstoken");
+var {
+  createToken,
+  createTokenPayload,
+} = require("../../middleware/access-token");
 const bcrypt = require("bcrypt");
 var router = express.Router();
 

@@ -3,8 +3,8 @@ const createHttpError = require("http-errors");
 const {
   requiresLaxAuthentication,
   requiresStrictAuthentication,
-} = require("../../helpers/accesstoken");
-const dateValidator = require("../../helpers/dateValidator");
+} = require("../../middleware/access-token");
+const dateValidator = require("../../helpers/date-validator");
 var router = express.Router();
 
 /* GET user profile route. */
